@@ -56,7 +56,11 @@ class Output(db.Model):
         self.hash = hashlib.sha512(text.encode('utf8')).hexdigest()
         self.text = text
         self.params = simplejson.dumps(params)
-                
+
+@app.context_processor
+def inject_settings():
+    return dict(settings=app.config)
+
 @app.errorhandler(404)
 def page_not_found(error):
     return render_template('404.html',title=u"To tady nemáme!"), 404
@@ -86,7 +90,7 @@ def index():
     try:
         db.session.add(output)
         db.session.commit()
-    except IntegrityError: 
+    except IntegrityError:
         pass
     
     return render_template('generator.html', title=u"Henrykuj!",

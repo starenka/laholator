@@ -1,24 +1,31 @@
 <!doctype html>
-<title>Laholátor (α i Ω):: {{title}}</title>
-<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/screen.css') }}">
-<h1>{{title}}</h1>
-<div id="content">
-	{% block content %}{% endblock %}
-	<div id="credits">
-		text <a href="http://www.henryklahola.nazory.cz" target="_blank">JUDr.PhDr.Mgr. et Mgr.Henryk Lahola</a>,<br/>
-        prgačina <a href="http://www.starenka.net" target="_blank">starenka</a> L.P. MMXI,<br/>
-		jede na <a href="http://flask.pocoo.org" target="_blank">Flask</a>&nbsp;&amp;&nbsp;
-        <a href="http://www.nltk.org/" target="_blank">NLTK</a>
-	</div>
-</div>
-<script type="text/javascript">
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-1124837-12']);
-  _gaq.push(['_trackPageview']);
+<head>
+    <title>Laholátor (α i Ω):: {{title}}</title>
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/screen.css') }}">
+</head>
+<body>
+    <h1>{{title}}</h1>
+    <div id="content">
+        {% block content %}{% endblock %}
+        <div id="credits">
+            text <a href="http://www.henryklahola.nazory.cz" target="_blank">JUDr.PhDr.Mgr. et Mgr.Henryk Lahola</a>,<br/>
+            prgačina <a href="http://www.starenka.net" target="_blank">starenka</a> L.P. MMXI,<br/>
+            jede na <a href="http://flask.pocoo.org" target="_blank">Flask</a>&nbsp;&amp;&nbsp;
+            <a href="http://www.nltk.org/" target="_blank">NLTK</a>
+        </div>
+    </div>
+    {% if not settings.DEBUG %}
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', '{{ settings.GA_CODE }}']);
+      _gaq.push(['_trackPageview']);
 
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-</script>
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+    {% endif %}
+</body>
+</html>
