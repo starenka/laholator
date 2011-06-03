@@ -9,7 +9,10 @@ from os.path import dirname, abspath
 
 from flask import Flask, render_template, request
 from flaskext.sqlalchemy import SQLAlchemy
-from sqlalchemy.exceptions import IntegrityError
+try:
+    from sqlalchemy.exceptions import IntegrityError
+except ImportError:
+    from sqlalchemy.exc import IntegrityError
 
 #Hey monkey! NLTK's NgramModel is not serializable w/ pickle.HIGHEST_PROTOCOL (2)
 from werkzeug.contrib import cache
