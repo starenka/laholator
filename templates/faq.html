@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h3>Jak to funguje?</h3>
+    <p>V podstatě vezmu nějakej vzorek textu <small>(právě teď to jsou&nbsp;
+        {% for s in samples %}
+            <a href="{{s.url}}">{{s.url}}</a>{% if not loop.last %},&nbsp;{% endif %}
+        {% endfor %})</small>
+        a&nbsp;zbavím ho veškerejch věcí, který s&nbsp;vlastním textem nemají nic společnýho (HTML, Javascript).
+        Co zbyde se rozseká na slova a&nbsp;z&nbsp;nich se udělá model <a href="http://en.wikipedia.org/wiki/Ngram">N-gramů</a>,
+        což je něco jako zjištění všech kombinací n&nbsp;slov v&nbsp;textu <small>(ngramům se dvěma slovama se říká bigram a se třema trigram)</small>
+        a&nbsp;jejich frekvencí. Na základě toho modelu se pak vygeneruje text. Na začátek textu se používá prvních pár ntic
+        modelu. To není úplně ideální, takže generuju ještě jeden krátkej text a&nbsp;počáteční slova beru z&nbsp;něj.
+    </p>
+
+    <h3>Proč to děláš?</h3>
+    <p>Jsem fanouškem JUDr.PhDr.Mgr. et Mgr.Henryka Laholy.</p>
+
+    <h3>A kdo to je?</h3>
+    <p>Aha. No asi bych bejt tebou začal na týhle <a href="http://exotopedia.org/wiki/Henryk_Lahola">stránce</a> (po slovensky stránke).
+    A potom už se můžeš klidně pustit do pročítání Henrykových listů psaných nejen česky, po slovensky jakožto i&nbsp;v&nbsp; dalších
+    indoevropských jazycích, Martine.</p>
+
+    <h3>Co je "Lahola lite"?</h3>
+    <p>Lahola lite používá k vygenerování textu bigramy namísto trigramů (viz. předchozí).</p>
+
+    <h3>Proč je to tak ošklivý?</h3>
+    <p>Nemám čas ani grafický cítění. Pokud bys měl hezkej grafickej návrh, určitě se ozvi.</p>
+
+    <h3>Jsou tyhle stránky nevládní?</h3>
+	<p>Samozřejmě.</p>
+
+    <h3>Podporuješ homosexuálce?</h3>
+    <p>Jasně, Martine.</p>
+
+    <h3>Kolik máš titulů?</h3>
+    <p>Zatím mám jedináčka a není z Karlovy University (v Praze!).</p>
+
+    <h3>Asi se nudíš, viď?</h3>
+    <p>Jo.</p>
+
+    <h3>Hele, chci udělat něco podobnýho...</h3>
+    <p>Kostra těhle stránek bylo víceméně <a href="https://gist.github.com/1002721">tohle</a>. Klidně si posluž.</p>
+
+{% endblock %}

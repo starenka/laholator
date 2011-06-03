@@ -1,0 +1,6 @@
+settings/local.py
+.hg
+.hgignore
+.idea
+*.py[co]
+*.*~
