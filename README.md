@@ -1,5 +1,5 @@
-Laholátor : Simple app for text generation form given samples
-========================================================
+Laholátor : Simple app for text generation from given text samples
+=====
 
 Laholátor allows you to generate random text based on ngram sample analysis done by NLTK (http://www.nltk.org/).
 This particular app generates text based on work by JUDr.PhDr.Mgr. et Mgr.Henryk Lahola, but you can make it work
