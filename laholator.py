@@ -1,17 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-#
-# Laholator app
 # 
 # @author:     starenka
 # @email:      'moc]tod[liamg].T.E[0aknerats'[::-1]
-# @version:    1.1.1
-# @since       Jun 1, 2011
 
-import warnings
+import warnings, hashlib, simplejson
 from os.path import dirname, abspath
+
 from flask import Flask, render_template, request
 from flaskext.sqlalchemy import SQLAlchemy
+from sqlalchemy.exceptions import IntegrityError
 
 #Hey monkey! NLTK's NgramModel is not serializable w/ pickle.HIGHEST_PROTOCOL (2)
 from werkzeug.contrib import cache
@@ -25,17 +23,13 @@ app = Flask(__name__)
 app.config.from_object('settings')
 cache = SimpleCache()
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///%s/samples.sqlite3'%abspath(dirname(__file__))
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///%s/db.sqlite3'%abspath(dirname(__file__))
 db = SQLAlchemy(app)
 
 class Sample(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     url = db.Column(db.String(80), unique=True)
     text = db.Column(db.String())
-
-    def __init__(self, url, text):
-        self.url = url
-        self.text = text
 
     def __unicode__(self):
         str = unicode(BeautifulSoup(self.text,convertEntities=BeautifulSoup.HTML_ENTITIES))
@@ -49,6 +43,17 @@ class Sample(db.Model):
             cache.set('samples', cached, timeout=app.config['CACHE_MINUTES'] * 60)
         return cached
 
+class Output(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    hash = db.Column(db.String(128),unique=True)
+    text = db.Column(db.String())
+    params = db.Column(db.String(100))
+    
+    def __init__(self,text,**params):
+        self.hash = hashlib.sha512(text.encode('utf8')).hexdigest()
+        self.text = text
+        self.params = simplejson.dumps(params)
+                
 @app.errorhandler(404)
 def page_not_found(error):
     return render_template('404.html',title=u"To tady nemáme!"), 404
@@ -56,6 +61,14 @@ def page_not_found(error):
 @app.route('/faq')
 def faq():
     return render_template('faq.html',title=u"Často kladené dotazy",samples=Sample.get_all())
+
+@app.route('/permalink/<hash>')
+def permalink(hash):
+    one = Output.query.filter_by(hash=hash).first_or_404()
+    return render_template('generator.html', title=u"Henrykuj!", 
+                           text=one.text, hash=one.hash,  
+                           **simplejson.loads(one.params)
+    )
 
 @app.route('/')
 def index():
@@ -65,14 +78,17 @@ def index():
     except ValueError:
         words = app.config['WORDS']
 
-    model = _get_ngram_model(bigrams)
-    starts = model.generate(100)[-2:]
-    generated = model.generate(words, starts)
-    out = ' '.join(generated).replace(' , ',', ').replace(' . ','. ')
-    out = '%s%s&hellip;'%(out[0].upper(),out[1:])
-
-    return render_template('generator.html',title=u"Henrykuj!",
-                           text=out, words = words, bigrams = bigrams
+    out = _generate(words,bigrams)
+    output = Output(out,words=words,bigrams=bool(bigrams))
+    try:
+        db.session.add(output)
+        db.session.commit()
+    except IntegrityError: 
+        pass
+    
+    return render_template('generator.html', title=u"Henrykuj!",
+                           text=out, hash=output.hash,
+                           words=words, bigrams=bigrams
     )
 
 def _get_ngram_model(bigrams):
@@ -88,6 +104,13 @@ def _get_ngram_model(bigrams):
             cached = nltk.NgramModel(3-int(bool(bigrams)), tokenized)
             cache.set('ngram_model', cached, timeout=app.config['CACHE_MINUTES'] * 60)
     return cached
+
+def _generate(words,bigrams):
+    model = _get_ngram_model(bigrams)
+    starts = model.generate(100)[-2:]
+    generated = model.generate(words, starts)
+    out = ' '.join(generated).replace(' , ',', ').replace(' . ','. ')
+    return '%s%s&hellip;'%(out[0].upper(),out[1:])
 
 if __name__ == '__main__':
     app.run()
