@@ -55,10 +55,7 @@ def page_not_found(error):
 
 @app.route('/faq')
 def faq():
-    return render_template('faq.html',title=u"Často kladené dotazy",
-                           cache_interval=app.config['CACHE_MINUTES'],
-                           samples=Sample.get_all()
-    )
+    return render_template('faq.html',title=u"Často kladené dotazy",samples=Sample.get_all())
 
 @app.route('/')
 def index():
@@ -68,9 +65,9 @@ def index():
     except ValueError:
         words = app.config['WORDS']
 
-    cached_model = _get_ngram_model(bigrams)
-    starts = cached_model.generate(100)[-2:]
-    generated = cached_model.generate(words, starts)
+    model = _get_ngram_model(bigrams)
+    starts = model.generate(100)[-2:]
+    generated = model.generate(words, starts)
     out = ' '.join(generated).replace(' , ',', ').replace(' . ','. ')
     out = '%s%s&hellip;'%(out[0].upper(),out[1:])
 
