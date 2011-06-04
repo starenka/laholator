@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 {% block content %}
     <form action=/>
-        Slov:&nbsp;<input type=search name=words value={{words}} />
-        Lahola lite:&nbsp;<input type=checkbox name=bigrams {% if bigrams %}checked=checked{%endif%} />
+        <label for=words>Slov:</label>&nbsp;<input type=search id=words name=words value={{words}} />
+        <label for=bigrams>Lahola lite:</label>&nbsp;<input type=checkbox id=bigrams name=bigrams {% if bigrams %}checked=checked{%endif%} />
         <input type=submit />
         &nbsp;<a href="/faq">FAQ</a>
     </form>

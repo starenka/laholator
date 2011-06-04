@@ -8,10 +8,10 @@
     <div id="content">
         {% block content %}{% endblock %}
         <div id="credits">
-            text <a href="http://www.henryklahola.nazory.cz" target="_blank">JUDr.PhDr.Mgr. et Mgr.Henryk Lahola</a>,<br/>
-            prgačina <a href="http://www.starenka.net" target="_blank">starenka</a> L.P. MMXI,<br/>
-            jede na <a href="http://flask.pocoo.org" target="_blank">Flask</a>&nbsp;&amp;&nbsp;
-            <a href="http://www.nltk.org/" target="_blank">NLTK</a>
+            text <a href="http://www.henryklahola.nazory.cz" target="_blank">JUDr.PhDr.Mgr. et Mgr.Henryk Lahola</a>, 
+            prgačina <a href="http://www.starenka.net" target="_blank">starenka</a> L.P. MMXI,
+            jede na <a href="http://flask.pocoo.org" target="_blank">Flask</a>&nbsp;&amp;&nbsp;<a href="http://www.nltk.org/" target="_blank">NLTK</a><br/>
+            Už jsme vyhenrikovali <span id="hits">{{ hits }}</span> listůch.
         </div>
     </div>
     {% if not settings.DEBUG %}

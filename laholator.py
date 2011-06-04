@@ -59,8 +59,10 @@ class Output(db.Model):
         self.params = simplejson.dumps(params)
 
 @app.context_processor
-def inject_settings():
-    return dict(settings=app.config)
+def base_context():
+    return dict(settings=app.config,
+        hits = Output.query.count() + app.config['INIT_HITS']
+    )
 
 @app.errorhandler(404)
 def page_not_found(error):
