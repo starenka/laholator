@@ -33,6 +33,7 @@ class Sample(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     url = db.Column(db.String(80), unique=True)
     text = db.Column(db.String())
+    enabled = db.Column(db.Boolean())
 
     def __unicode__(self):
         str = unicode(BeautifulSoup(self.text,convertEntities=BeautifulSoup.HTML_ENTITIES))
@@ -42,7 +43,7 @@ class Sample(db.Model):
     def get_all(self):
         cached = cache.get('samples')
         if cached is None:
-            cached = self.query.all()
+            cached = self.query.filter_by(enabled=True).all()
             cache.set('samples', cached, timeout=app.config['CACHE_MINUTES'] * 60)
         return cached
 
