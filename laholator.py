@@ -4,7 +4,7 @@
 # @author:     starenka
 # @email:      'moc]tod[liamg].T.E[0aknerats'[::-1]
 
-import warnings, hashlib, simplejson
+import warnings, hashlib, simplejson, string
 from os.path import dirname, abspath
 
 from flask import Flask, render_template, request
@@ -14,13 +14,15 @@ try:
 except ImportError:
     from sqlalchemy.exc import IntegrityError
 
-#Hey monkey! NLTK's NgramModel is not serializable w/ pickle.HIGHEST_PROTOCOL (2)
+#Hey monkey patcher! NLTK's NgramModel is not serializable w/ pickle.HIGHEST_PROTOCOL (2)
 from werkzeug.contrib import cache
 cache.HIGHEST_PROTOCOL = 1
 from werkzeug.contrib.cache import SimpleCache
 
 from BeautifulSoup import BeautifulSoup
 import nltk
+
+PUNCT = list(unicode(string.punctuation))
 
 app = Flask(__name__)
 app.config.from_object('settings')
@@ -117,7 +119,8 @@ def _get_ngram_model(bigrams):
 
 def _generate(words,bigrams):
     model = _get_ngram_model(bigrams)
-    starts = model.generate(100)[-2:]
+    starts = model.generate(100)[-4:]
+    starts = filter(lambda a: a not in PUNCT,starts)
     generated = model.generate(words, starts)
     out = ' '.join(generated).replace(' , ',', ').replace(' . ','. ')
     return '%s%s&hellip;'%(out[0].upper(),out[1:])
