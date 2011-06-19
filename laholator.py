@@ -87,6 +87,8 @@ def index():
     bigrams = request.args.get('bigrams',False)
     try:
         words = int(request.args.get('words',app.config['WORDS']))
+        if words > app.config['MAX_WORDS']:
+            words = app.config['MAX_WORDS']
     except ValueError:
         words = app.config['WORDS']
 
