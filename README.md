@@ -8,6 +8,10 @@ for any other texts by modifying the "sample" table in db. It's build on Flask (
 Setup
 -----
 
+To install all dependecies just try:
+
+    pip install -r requirements.pip
+
 To setup the app, just edit your settings either in settings/base.py (used both on dev and production), settings/production.py or settings/local_empty.py to suit your needs. If you edit local_empty.py be sure to copy it as local.py in order to get loaded during development.
 
 The WSGI file should work w/out any tuning. Consult your web server docs to make wsgi work with your server. Sample vhost file for Apache would look like this:
