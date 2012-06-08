@@ -8,7 +8,7 @@ import warnings, hashlib, simplejson, string
 from os.path import dirname, abspath
 
 from flask import Flask, render_template, request
-from flaskext.sqlalchemy import SQLAlchemy
+from flask.ext.sqlalchemy import SQLAlchemy
 try:
     from sqlalchemy.exceptions import IntegrityError
 except ImportError:
@@ -16,7 +16,7 @@ except ImportError:
 
 #Hey monkey patcher! NLTK's NgramModel is not serializable w/ pickle.HIGHEST_PROTOCOL (2)
 from werkzeug.contrib import cache
-cache.HIGHEST_PROTOCOL = 1
+cache.HIGHEST_PROTOCOL = 1.0
 from werkzeug.contrib.cache import SimpleCache
 
 from BeautifulSoup import BeautifulSoup
